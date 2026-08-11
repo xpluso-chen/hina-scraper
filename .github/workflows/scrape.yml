@@ -1,0 +1,57 @@
+name: Scrape
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "要爬取的網址 (必填)"
+        required: true
+        type: string
+      selector:
+        description: "要抓取的 CSS 選擇器 (必填)"
+        required: true
+        type: string
+      wait_selector:
+        description: "動態網站要等待出現的 CSS 選擇器 (選填)"
+        required: false
+        type: string
+      scroll_times:
+        description: "捲動載入更多內容的次數 (選填，預設 0 = 不捲動)"
+        required: false
+        type: string
+        default: "0"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser (Chromium)
+        run: playwright install --with-deps chromium
+
+      - name: Run scraper
+        env:
+          TARGET_URL: ${{ inputs.target_url }}
+          SELECTOR: ${{ inputs.selector }}
+          WAIT_SELECTOR: ${{ inputs.wait_selector }}
+          SCROLL_TIMES: ${{ inputs.scroll_times }}
+        run: python scraper.py
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-results
+          path: output/
+          if-no-files-found: warn
