@@ -219,3 +219,6 @@ __marimo__/
 
 # Scraper output
 output/
+
+# Claude Code
+CLAUDE.md
