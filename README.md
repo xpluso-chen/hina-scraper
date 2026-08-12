@@ -65,7 +65,10 @@ document.querySelectorAll('你的選擇器')
 
 ### 3. 下載結果
 
-執行完成後，點進該次 run（Actions 頁面的執行紀錄），畫面最下方 **Artifacts** 區塊會有 `scrape-results.zip`，下載解壓後就是 `output/result.csv`。
+執行完成後，點進該次 run（Actions 頁面的執行紀錄），畫面最下方 **Artifacts** 區塊會有 `scrape-results.zip`，下載解壓後會看到：
+
+- `output/result.csv` — 爬取結果
+- `output/debug_screenshot.png` — 抓取當下頁面的完整截圖（無論成功或失敗都會存，方便確認選擇器有沒有抓對地方、頁面是否被擋下或還沒載入完成）
 
 如果執行失敗，可以點開步驟的 log（尤其是 **Run scraper** 這一步）看詳細錯誤訊息，scraper.py 有記錄清楚的 log 方便除錯。
 
@@ -96,6 +99,6 @@ Private repo 免費額度大約可以跑 **600～1000 次/月**，個人使用�
 
 | 狀況 | 可能原因 / 解法 |
 |---|---|
-| CSV 是空的 | `selector` 沒抓對，先用瀏覽器 Console 的 `document.querySelectorAll()` 測試 |
-| 執行超時 / 卡住 | `wait_selector` 填的元素一直沒出現，確認選擇器正確，或該網站有反爬蟲機制擋掉 headless 瀏覽器 |
-| 抓到的內容跟預期不同 | 部分網站對不同地區/裝置回傳不同內容，可在 log 裡確認實際抓到的 HTML 結構 |
+| CSV 是空的 | `selector` 沒抓對，先用瀏覽器 Console 的 `document.querySelectorAll()` 測試；也可以下載 `output/debug_screenshot.png` 看當下頁面實際長怎樣 |
+| 執行超時 / 卡住 | `wait_selector` 填的元素一直沒出現，確認選擇器正確，或該網站有反爬蟲機制擋掉 headless 瀏覽器（截圖裡若出現驗證頁/空白頁即為此狀況） |
+| 抓到的內容跟預期不同 | 部分網站對不同地區/裝置回傳不同內容，可在 log 裡確認實際抓到的 HTML 結構，或參考截圖 |

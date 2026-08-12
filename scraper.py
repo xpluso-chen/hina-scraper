@@ -127,9 +127,20 @@ def scrape(args: argparse.Namespace) -> list[dict]:
             log.error("Playwright error while scraping: %s", exc)
             raise
         finally:
+            save_debug_screenshot(page, args.output)
             browser.close()
 
     return rows
+
+
+def save_debug_screenshot(page, output_path: str) -> None:
+    screenshot_path = Path(output_path).parent / "debug_screenshot.png"
+    screenshot_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        page.screenshot(path=str(screenshot_path), full_page=True)
+        log.info("Saved debug screenshot to %s", screenshot_path)
+    except PlaywrightError as exc:
+        log.warning("Failed to save debug screenshot: %s", exc)
 
 
 def write_csv(rows: list[dict], output_path: str) -> None:
